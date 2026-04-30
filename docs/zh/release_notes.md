@@ -313,6 +313,13 @@
 <td class="cellrowborder" valign="top" width="46.239999999999995%" headers="mcps1.1.4.1.3 "><p id="zh-cn_topic_0000002501057426_p21377472033"><a name="zh-cn_topic_0000002501057426_p21377472033"></a><a name="zh-cn_topic_0000002501057426_p21377472033"></a>OS差异导致，beamsearch场景推荐使用ubuntu镜像。</p>
 </td>
 </tr>
+<tr id="zh-cn_topic_0000002501057426_row31362471539"><td class="cellrowborder" valign="top" width="6.4799999999999995%" headers="mcps1.1.4.1.1 "><p id="zh-cn_topic_0000002501057426_p1248055663815"><a name="zh-cn_topic_0000002501057426_p1248055663815"></a><a name="zh-cn_topic_0000002501057426_p1248055663815"></a>4</p>
+</td>
+<td class="cellrowborder" valign="top" width="47.28%" headers="mcps1.1.4.1.2 "><p id="zh-cn_topic_0000002501057426_p51374477316"><a name="zh-cn_topic_0000002501057426_p51374477316"></a><a name="zh-cn_topic_0000002501057426_p51374477316"></a>DeepSeekV3.1模型，A2大EP定长输入场景下，部分request rate > 0的性能测试场景TTFT出现劣化</p>
+</td>
+<td class="cellrowborder" valign="top" width="46.239999999999995%" headers="mcps1.1.4.1.3 "><p id="zh-cn_topic_0000002501057426_p21377472033"><a name="zh-cn_topic_0000002501057426_p21377472033"></a><a name="zh-cn_topic_0000002501057426_p21377472033"></a>1) 下调request rate 5%，可复现原有TTFT; 2) 定长输入场景修改大EP启动脚本中`conf/ms_corrdinator.json`中`select_type`字段为`1`，关闭dp负载均衡，可复现原有TTFT。</p>
+</td>
+</tr>
 </tbody>
 </table>
 
