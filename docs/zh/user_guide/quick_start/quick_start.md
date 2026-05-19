@@ -10,9 +10,9 @@
 
 - 执行以下命令查看NPU驱动固件是否安装。若出现类似如[图1](#figure1)所示，说明已安装。否则请参见[表1](#table1)进行安装。
 
-     ```bash
-     npu-smi info
-     ```
+    ```bash
+    npu-smi info
+    ```
 
     **图 1**  回显信息  <a id="figure1"></a>
 
@@ -26,24 +26,24 @@
 
 - 执行以下命令查看Docker是否已安装并启动。Docker的安装可参见[安装Docker](../install/source/docker_installation.md)。
 
-     ```bash
-     docker ps
-     ```
+    ```bash
+    docker ps
+    ```
 
     回显以下信息表示Docker已安装并启动。
 
-     ```text
-     CONTAINER ID        IMAGE        COMMAND         CREATED        STATUS         PORTS           NAMES
-     ```
+    ```text
+    CONTAINER ID        IMAGE        COMMAND         CREATED        STATUS         PORTS           NAMES
+    ```
 
 ### 获取模型权重
 
 1. 请先下载权重，这里以Qwen2-7B为例，下载链接：[https://huggingface.co/Qwen/Qwen2-7B/tree/main](https://huggingface.co/Qwen/Qwen2-7B/tree/main)，将权重文件上传至服务器任意目录（如/home/weight）。
 2. 执行以下命令，修改权重文件权限：
 
-     ```bash
-     chmod -R 755 /home/weight
-     ```
+    ```bash
+    chmod -R 755 /home/weight
+    ```
 
 ### 获取容器镜像
 
@@ -83,11 +83,11 @@
            mindie:3.0.0-800I-A2-py311-openeuler24.03-lts bash
     ```
 
-     > [!NOTE]说明
-     > - “mindie:3.0.0-800I-A2-py311-openeuler24.03-lts”为镜像名称，可根据实际情况修改。
-     > - 对于--device参数，挂载权限设置为rwm，而非权限较小的rw或r，原因如下：
-     > - 对于Atlas 800I A2 推理服务器，若设置挂载权限为rw，可以正常进入容器，同时也可以使用npu-smi命令查看npu占用信息，并正常运行MindIE业务；但如果挂载的npu（即对应挂载选项中的davinci_xxx_，如npu0对应davinci0）上有其它任务占用，则使用npu-smi命令会打印报错，且无法运行MindIE任务（此时torch.npu.set_device()会失败）。
-     > - 对于Atlas 800I A3 超节点服务器，若设置挂载权限为rw，进入容器后，使用npu-smi命令会打印报错，且无法运行MindIE任务（此时torch.npu.set_device()会失败）。
+    > [!NOTE]说明
+    > - “mindie:3.0.0-800I-A2-py311-openeuler24.03-lts”为镜像名称，可根据实际情况修改。
+    > - 对于--device参数，挂载权限设置为rwm，而非权限较小的rw或r，原因如下：
+    > - 对于Atlas 800I A2 推理服务器，若设置挂载权限为rw，可以正常进入容器，同时也可以使用npu-smi命令查看npu占用信息，并正常运行MindIE业务；但如果挂载的npu（即对应挂载选项中的davinci_xxx_，如npu0对应davinci0）上有其它任务占用，则使用npu-smi命令会打印报错，且无法运行MindIE任务（此时torch.npu.set_device()会失败）。
+    > - 对于Atlas 800I A3 超节点服务器，若设置挂载权限为rw，进入容器后，使用npu-smi命令会打印报错，且无法运行MindIE任务（此时torch.npu.set_device()会失败）。
 
     **表 1**  参数说明
 
@@ -101,12 +101,12 @@
 
 2. 执行以下命令进入容器。
 
-     ```bash
-     docker exec -it <container-name> /bin/bash
-     ```
+    ```bash
+    docker exec -it <container-name> /bin/bash
+    ```
 
-     > [!NOTE]说明
-     > 更多详细信息，请参考[启动容器](https://gitee.com/ascend/ascend-docker-image/tree/dev/mindie#%E5%90%AF%E5%8A%A8%E5%AE%B9%E5%99%A8)章节。
+    > [!NOTE]说明
+    > 更多详细信息，请参考[启动容器](https://gitee.com/ascend/ascend-docker-image/tree/dev/mindie#%E5%90%AF%E5%8A%A8%E5%AE%B9%E5%99%A8)章节。
 
 ## 模型推理
 
@@ -245,12 +245,12 @@
     Daemon start success!
     ```
 
-     > [!CAUTION]注意
-     >- 如果安装过老版本的MindIE（默认安装路径为`/usr/local/Ascend/mindie`）,为避免搜索到老版本的库，请执行命令`mv /usr/local/Ascend/mindie /usr/local/Ascend/mindie-bak`，移除老版本安装路径下的文件。
-     >- bin目录按照安全要求，目录权限为550，没有写权限，但执行推理过程中，算子会在当前目录生成kernel\_meta文件夹，需要写权限，因此不能直接在bin启动mindieservice\_daemon。
-     >- Ascend-cann-toolkit工具会在执行服务启动的目录下生成kernel\_meta\_temp\_xxxx目录，该目录为算子的cce文件保存目录。因此需要在当前用户拥有写权限目录下（例如Ascend-mindie-server\__\{version\}_\_linux-_\{arch\}_目录，或者用户在Ascend-mindie-server\__\{version\}_\_linux-_\{arch\}_目录下自行创建临时目录）启动推理服务。
-     >- 如需切换用户，请在切换用户后执行**rm -f /dev/shm/\***命令，删除由之前用户运行创建的共享文件。避免切换用户后，该用户没有之前用户创建的共享文件的读写权限，造成推理失败。
-     >- 标准输出流捕获到的文件output.log支持用户自定义文件和路径。
+    > [!CAUTION]注意
+    >- 如果安装过老版本的MindIE（默认安装路径为`/usr/local/Ascend/mindie`）,为避免搜索到老版本的库，请执行命令`mv /usr/local/Ascend/mindie /usr/local/Ascend/mindie-bak`，移除老版本安装路径下的文件。
+    >- bin目录按照安全要求，目录权限为550，没有写权限，但执行推理过程中，算子会在当前目录生成kernel\_meta文件夹，需要写权限，因此不能直接在bin启动mindieservice\_daemon。
+    >- Ascend-cann-toolkit工具会在执行服务启动的目录下生成kernel\_meta\_temp\_xxxx目录，该目录为算子的cce文件保存目录。因此需要在当前用户拥有写权限目录下（例如Ascend-mindie-server\__\{version\}_\_linux-_\{arch\}_目录，或者用户在Ascend-mindie-server\__\{version\}_\_linux-_\{arch\}_目录下自行创建临时目录）启动推理服务。
+    >- 如需切换用户，请在切换用户后执行**rm -f /dev/shm/\***命令，删除由之前用户运行创建的共享文件。避免切换用户后，该用户没有之前用户创建的共享文件的读写权限，造成推理失败。
+    >- 标准输出流捕获到的文件output.log支持用户自定义文件和路径。
 
 6. 发送请求。
 
