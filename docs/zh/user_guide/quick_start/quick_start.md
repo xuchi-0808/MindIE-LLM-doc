@@ -86,11 +86,11 @@
            -v /usr/local/bin/npu-smi:/usr/local/bin/npu-smi:ro \
            -v /usr/local/sbin/:/usr/local/sbin:ro \
            -v /home/weight:/home/weight:ro \
-           mindie:3.0.0-800I-A2-py311-openeuler24.03-lts bash
+           {IMAGE_ID} bash
     ```
 
     > [!NOTE] 说明
-    > - “mindie:3.0.0-800I-A2-py311-openeuler24.03-lts”为镜像名称，可根据实际情况修改。
+    > - `{IMAGE_ID}` 为镜像 ID，镜像安装完成后，执行 `docker images` 命令，即可查看对应 ID，替换在上述命令中即可。
     > - `--shm-size` 参数表示共享存储大小，可以按需设置。
     > - 对于 `--device` 参数，挂载权限设置为 `rwm`，而非权限较小的 `rw` 或 `r`，原因如下：
     > - 对于 Atlas 800I A2 推理服务器，若设置挂载权限为 `rw`，可以正常进入容器，同时也可以使用 `npu-smi` 命令查看 npu 占用信息，并正常运行 MindIE 业务；但如果挂载的 npu（即对应挂载选项中的 `davinci_xxx_`，如 `npu0` 对应 `davinci0`）上有其它任务占用，则使用 `npu-smi` 命令会打印报错，且无法运行 MindIE 任务（此时 `torch.npu.set_device()` 会失败）。
