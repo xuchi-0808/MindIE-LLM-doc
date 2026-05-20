@@ -224,12 +224,6 @@
         Daemon start success!
         ```
 
-    c. 回显如下则说明启动成功。
-
-    ```text
-    Daemon start success!
-    ```
-
     > [!CAUTION]注意
     > - `bin` 目录按照安全要求，目录权限为 `550`，没有写权限，但执行推理过程中，算子会在当前目录生成 `kernel_meta` 文件夹，需要写权限，因此不能直接在 `bin` 启动 `mindieservice_daemon`。
     > - Ascend-cann-toolkit 工具会在执行服务启动的目录下生成 `kernel_meta_temp_xxxx` 目录，该目录为算子的 cce 文件保存目录。因此需要在当前用户拥有写权限目录下（例如 `Ascend-mindie-server_{version}_linux-{arch}` 目录，或者用户在 `Ascend-mindie-server_{version}_linux-{arch}` 目录下自行创建临时目录）启动推理服务。
